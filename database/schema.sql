@@ -1,6 +1,5 @@
 -- MailSync AI: run this whole file in the Supabase SQL Editor.
--- NOTE: if you use local embeddings (all-MiniLM-L6-v2), replace every 1536 below with 384
--- and set EMBEDDING_PROVIDER=local in .env.
+-- Configured for local embeddings (all-MiniLM-L6-v2); set EMBEDDING_PROVIDER=local in .env.
 
 CREATE EXTENSION IF NOT EXISTS vector;
 
@@ -24,7 +23,7 @@ CREATE TABLE IF NOT EXISTS items (
     location VARCHAR(255) NOT NULL,
     event_date_time VARCHAR(100),
     summary TEXT NOT NULL,
-    embedding vector(1536),
+    embedding vector(384),
     status item_status DEFAULT 'searching',
     created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW()
 );
@@ -46,7 +45,7 @@ CREATE INDEX IF NOT EXISTS idx_items_status_intent ON items(status, intent);
 
 -- Returns open items of the opposite intent, ranked by cosine similarity.
 CREATE OR REPLACE FUNCTION match_items(
-    query_embedding vector(1536),
+    query_embedding vector(384),
     match_intent item_intent,
     match_threshold FLOAT,
     max_results INT
